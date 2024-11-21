@@ -25,37 +25,31 @@ var vertices = [
 
 
 var torsoId = 0;
-var headId  = 1;
-var head1Id = 1;
-var head2Id = 10;
-var leftUpperArmId = 2;
-var leftLowerArmId = 3;
-var rightUpperArmId = 4;
-var rightLowerArmId = 5;
-var leftUpperLegId = 6;
-var leftLowerLegId = 7;
-var rightUpperLegId = 8;
-var rightLowerLegId = 9;
-
+var mainShaftId = 1;
+var fanShaft1Id = 2;
+var fan1Id = 3;
+var fanShaft2Id = 4;
+var fan2Id = 5;
+var fanShaft3Id = 6;
+var fan3Id = 7;
+var fanShaft4Id = 8;
+var fan4Id = 9;
 
 var torsoHeight = 5.0;
 var torsoWidth = 1.0;
-var upperArmHeight = 3.0;
-var lowerArmHeight = 2.0;
-var upperArmWidth  = 0.5;
-var lowerArmWidth  = 0.5;
-var upperLegWidth  = 0.5;
-var lowerLegWidth  = 0.5;
-var lowerLegHeight = 2.0;
-var upperLegHeight = 3.0;
-var headHeight = 1.5;
-var headWidth = 1.0;
+var mainShaftHeight = 5.0;
+var mainShaftWidth = 0.5;
+var fanShaftHeight = 6.0;
+var fanShaftWidth  = 0.5;
+var fanHeight = 6.0;
+var fanWidth  = 2.0;
 
+var numSides = 16;
 var numNodes = 10;
 var numAngles = 11;
 var angle = 0;
 
-var theta = [0, 0, 0, 0, 0, 0, 180, 0, 180, 0, 0];
+var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 var numVertices = 24;
 
@@ -105,76 +99,77 @@ function initNodes(Id) {
     case torsoId:
 
     m = rotate(theta[torsoId], vec3(0, 1, 0) );
-    figure[torsoId] = createNode( m, torso, null, headId );
+    figure[torsoId] = createNode( m, torso, null, mainShaftId );
     break;
 
-    case headId:
-    case head1Id:
-    case head2Id:
+    case mainShaftId:
 
-
-    m = translate(0.0, torsoHeight+0.5*headHeight, 0.0);
-	  m = mult(m, rotate(theta[head1Id], vec3(1, 0, 0)))
-	  m = mult(m, rotate(theta[head2Id], vec3(0, 1, 0)));
-    m = mult(m, translate(0.0, -0.5*headHeight, 0.0));
-    figure[headId] = createNode( m, head, leftUpperArmId, null);
+    m = translate(0.0, 2.0, 0.0);
+      m = mult(m, rotate( -90, vec3(1, 0, 0)));
+	  m = mult(m, rotate(theta[mainShaftId], vec3(0, 1, 0)));
+    figure[mainShaftId] = createNode( m, mainShaft, null, fanShaft1Id);
     break;
 
+    case fanShaft1Id:
 
-    case leftUpperArmId:
-
-    m = translate(-(torsoWidth+upperArmWidth), 0.9*torsoHeight, 0.0);
-	  m = mult(m, rotate(theta[leftUpperArmId], vec3(1, 0, 0)));
-    figure[leftUpperArmId] = createNode( m, leftUpperArm, rightUpperArmId, leftLowerArmId );
+    m = translate(0.0, 5.0, 0.0);
+      m = mult(m, rotate( -90, vec3(1, 0, 0)));
+	  m = mult(m, rotate(theta[fanShaft1Id], vec3(0, 1, 0)));
+    figure[fanShaft1Id] = createNode( m, fanShaft, fanShaft2Id, fan1Id );
     break;
 
-    case rightUpperArmId:
+    case fanShaft2Id:
 
-    m = translate(torsoWidth+upperArmWidth, 0.9*torsoHeight, 0.0);
-	  m = mult(m, rotate(theta[rightUpperArmId], vec3(1, 0, 0)));
-    figure[rightUpperArmId] = createNode( m, rightUpperArm, leftUpperLegId, rightLowerArmId );
+    m = translate(0.0, 5.0, 0.0);
+      m = mult(m, rotate( -90, vec3(0, 0, 1)));
+      m = mult(m, rotate( 90, vec3(0, 1, 0)));
+	  m = mult(m, rotate(theta[fanShaft2Id], vec3(0, 1, 0)));
+    figure[fanShaft2Id] = createNode( m, fanShaft, fanShaft3Id, fan2Id );
     break;
 
-    case leftUpperLegId:
+    case fanShaft3Id:
 
-    m = translate(-(torsoWidth+upperLegWidth), 0.1*upperLegHeight, 0.0);
-	  m = mult(m , rotate(theta[leftUpperLegId], vec3(1, 0, 0)));
-    figure[leftUpperLegId] = createNode( m, leftUpperLeg, rightUpperLegId, leftLowerLegId );
+    m = translate(0.0, 5.0, 0.0);
+      m = mult(m, rotate( 90, vec3(1, 0, 0)));
+	  m = mult(m , rotate(theta[fanShaft3Id], vec3(0, 1, 0)));
+    figure[fanShaft3Id] = createNode( m, fanShaft, fanShaft4Id, fan3Id );
     break;
 
-    case rightUpperLegId:
+    case fanShaft4Id:
 
-    m = translate(torsoWidth+upperLegWidth, 0.1*upperLegHeight, 0.0);
-	  m = mult(m, rotate(theta[rightUpperLegId], vec3(1, 0, 0)));
-    figure[rightUpperLegId] = createNode( m, rightUpperLeg, null, rightLowerLegId );
+    m = translate(0.0, 5.0, 0.0);
+      m = mult(m, rotate( 90, vec3(0, 0, 1)));
+      m = mult(m, rotate( 90, vec3(0, 1, 0)));
+	  m = mult(m, rotate(theta[fanShaft4Id], vec3(0, 1, 0)));
+    figure[fanShaft4Id] = createNode( m, fanShaft, null, fan4Id );
     break;
 
-    case leftLowerArmId:
+    case fan1Id:
 
-    m = translate(0.0, upperArmHeight, 0.0);
-    m = mult(m, rotate(theta[leftLowerArmId], vec3(1, 0, 0)));
-    figure[leftLowerArmId] = createNode( m, leftLowerArm, null, null );
+    m = translate(0.0, 0.0, 0.0);
+    m = mult(m, rotate(theta[fan1Id], vec3(1, 0, 0)));
+    figure[fan1Id] = createNode( m, fan, null, null );
     break;
 
-    case rightLowerArmId:
+    case fan2Id:
 
-    m = translate(0.0, upperArmHeight, 0.0);
-    m = mult(m, rotate(theta[rightLowerArmId], vec3(1, 0, 0)));
-    figure[rightLowerArmId] = createNode( m, rightLowerArm, null, null );
+    m = translate(0.0, 0.0, 0.0);
+    m = mult(m, rotate(theta[fan2Id], vec3(1, 0, 0)));
+    figure[fan2Id] = createNode( m, fan, null, null );
     break;
 
-    case leftLowerLegId:
+    case fan3Id:
 
-    m = translate(0.0, upperLegHeight, 0.0);
-    m = mult(m, rotate(theta[leftLowerLegId],vec3(1, 0, 0)));
-    figure[leftLowerLegId] = createNode( m, leftLowerLeg, null, null );
+    m = translate(0.0, 0.0, 0.0);
+    m = mult(m, rotate(theta[fan3Id],vec3(1, 0, 0)));
+    figure[fan3Id] = createNode( m, fan, null, null );
     break;
 
-    case rightLowerLegId:
+    case fan4Id:
 
-    m = translate(0.0, upperLegHeight, 0.0);
-    m = mult(m, rotate(theta[rightLowerLegId], vec3(1, 0, 0)));
-    figure[rightLowerLegId] = createNode( m, rightLowerLeg, null, null );
+    m = translate(0.0, 0.0, 0.0);
+    m = mult(m, rotate(theta[fan4Id], vec3(1, 0, 0)));
+    figure[fan4Id] = createNode( m, fan, null, null );
     break;
 
     }
@@ -197,77 +192,30 @@ function torso() {
     instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5*torsoHeight, 0.0) );
     instanceMatrix = mult(instanceMatrix, scale( torsoWidth, torsoHeight, torsoWidth));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
+    // for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
+    cylinder();
 }
 
-function head() {
+function mainShaft() {
 
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * headHeight, 0.0 ));
-	instanceMatrix = mult(instanceMatrix, scale(headWidth, headHeight, headWidth) );
+    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * mainShaftHeight, 0.0 ));
+	instanceMatrix = mult(instanceMatrix, scale(mainShaftWidth, mainShaftHeight, mainShaftWidth) );
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
 
-function leftUpperArm() {
+function fanShaft() {
 
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * upperArmHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(upperArmWidth, upperArmHeight, upperArmWidth) );
+    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * fanShaftHeight, 0.0) );
+	instanceMatrix = mult(instanceMatrix, scale(fanShaftWidth, fanShaftHeight, fanShaftWidth) );
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
 
-function leftLowerArm() {
+function fan() {
 
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * lowerArmHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(lowerArmWidth, lowerArmHeight, lowerArmWidth) );
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function rightUpperArm() {
-
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * upperArmHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(upperArmWidth, upperArmHeight, upperArmWidth) );
-  gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function rightLowerArm() {
-
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * lowerArmHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(lowerArmWidth, lowerArmHeight, lowerArmWidth) );
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function  leftUpperLeg() {
-
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * upperLegHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(upperLegWidth, upperLegHeight, upperLegWidth) );
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function leftLowerLeg() {
-
-    instanceMatrix = mult(modelViewMatrix, translate( 0.0, 0.5 * lowerLegHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(lowerLegWidth, lowerLegHeight, lowerLegWidth) );
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function rightUpperLeg() {
-
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * upperLegHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(upperLegWidth, upperLegHeight, upperLegWidth) );
-    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
-    for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
-}
-
-function rightLowerLeg() {
-
-    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * lowerLegHeight, 0.0) );
-	instanceMatrix = mult(instanceMatrix, scale(lowerLegWidth, lowerLegHeight, lowerLegWidth) )
+    instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * fanHeight, 0.0) );
+	instanceMatrix = mult(instanceMatrix, scale(fanWidth, fanHeight, 0.2) )
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
@@ -290,6 +238,78 @@ function cube()
     quad( 5, 4, 0, 1 );
 }
 
+function cylinder() {
+    var angleIncrement = 360 / numSides;
+
+    // Draw the top circle
+    for (var i = 0; i < numSides; i++) {
+        var angle1 = i * angleIncrement;
+        var angle2 = (i + 1) * angleIncrement;
+        var x1 = 2 * Math.cos(radians(angle1));
+        var y1 = 2; // Top of the cylinder
+        var z1 = 0.5 * Math.sin(radians(angle1));
+        var x2 = 2 * Math.cos(radians(angle2));
+        var y2 = 2; // Top of the cylinder
+        var z2 = 0.5 * Math.sin(radians(angle2));
+
+        pointsArray.push(vec4(0.0, y1, 0.0, 1.0)); // Center of the circle
+        pointsArray.push(vec4(x1, y1, z1, 1.0));
+        pointsArray.push(vec4(x2, y2, z2, 1.0));
+
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, pointsArray.length - 3, 3);
+
+
+    }
+
+    // Draw the bottom circle
+    for (var i = 0; i < numSides; i++) {
+        var angle1 = i * angleIncrement;
+        var angle2 = (i + 1) * angleIncrement;
+        var x1 = 4 * Math.cos(radians(angle1));
+        var y1 = -2.5; // Bottom of the cylinder
+        var z1 = 4 * Math.sin(radians(angle1));
+        var x2 = 4 * Math.cos(radians(angle2));
+        var y2 = -2.5; // Bottom of the cylinder
+        var z2 = 4 * Math.sin(radians(angle2));
+
+        pointsArray.push(vec4(0.0, y1, 0.0, 1.0)); // Center of the circle
+        pointsArray.push(vec4(x1, y1, z1, 1.0));
+        pointsArray.push(vec4(x2, y2, z2, 1.0));
+
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLES, pointsArray.length - 3, 3);
+
+
+    }
+
+    // Draw the sides
+    for (var i = 0; i < numSides; i++) {
+        var angle1 = i * angleIncrement;
+        var angle2 = (i + 1) * angleIncrement;
+        var x1top = 2 * Math.cos(radians(angle1));     // Top circle x
+        var z1top = 2 * Math.sin(radians(angle1));     // Top circle z
+        var x2top = 2 * Math.cos(radians(angle2));     // Top circle x
+        var z2top = 2 * Math.sin(radians(angle2));     // Top circle z
+
+        var x1bottom = 4 * Math.cos(radians(angle1)); // Bottom circle x
+        var z1bottom = 4 * Math.sin(radians(angle1)); // Bottom circle z
+        var x2bottom = 4 * Math.cos(radians(angle2)); // Bottom circle x
+        var z2bottom = 4 * Math.sin(radians(angle2)); // Bottom circle z
+
+
+        pointsArray.push(vec4(x1top, 0.5, z1top, 1.0));        // Top vertex
+        pointsArray.push(vec4(x1bottom, -2.5, z1bottom, 1.0)); // Bottom vertex
+
+        pointsArray.push(vec4(x2top, 0.5, z2top, 1.0)); // Top vertex
+        pointsArray.push(vec4(x2bottom, -2.5, z2bottom, 1.0)); // Bottom vertex
+
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+        gl.drawArrays(gl.TRIANGLE_STRIP, pointsArray.length - 4, 4);
+    }
+
+
+}
 
 function init() {
 
@@ -334,47 +354,41 @@ function init() {
         theta[torsoId ] = event.target.value;
         initNodes(torsoId);
     };
-        document.getElementById("slider1").onchange = function(event) {
-        theta[head1Id] = event.target.value;
-        initNodes(head1Id);
-    };
-
+    document.getElementById("slider1").onchange = function(event) {
+        theta[mainShaftId] = event.target.value;
+        initNodes(mainShaftId);
+   };
     document.getElementById("slider2").onchange = function(event) {
-         theta[leftUpperArmId] = event.target.value;
-         initNodes(leftUpperArmId);
+         theta[fanShaft1Id] = event.target.value;
+         initNodes(fanShaft1Id);
     };
     document.getElementById("slider3").onchange = function(event) {
-         theta[leftLowerArmId] =  event.target.value;
-         initNodes(leftLowerArmId);
+         theta[fan1Id] =  event.target.value;
+         initNodes(fan1Id);
     };
-
         document.getElementById("slider4").onchange = function(event) {
-        theta[rightUpperArmId] = event.target.value;
-        initNodes(rightUpperArmId);
+        theta[fanShaft2Id] = event.target.value;
+        initNodes(fanShaft2Id);
     };
     document.getElementById("slider5").onchange = function(event) {
-         theta[rightLowerArmId] =  event.target.value;
-         initNodes(rightLowerArmId);
+         theta[fan2Id] =  event.target.value;
+         initNodes(fan2Id);
     };
         document.getElementById("slider6").onchange = function(event) {
-        theta[leftUpperLegId] = event.target.value;
-        initNodes(leftUpperLegId);
+        theta[fanShaft3Id] = event.target.value;
+        initNodes(fanShaft3Id);
     };
     document.getElementById("slider7").onchange = function(event) {
-         theta[leftLowerLegId] = event.target.value;
-         initNodes(leftLowerLegId);
+         theta[fan3Id] = event.target.value;
+         initNodes(fan3Id);
     };
     document.getElementById("slider8").onchange = function(event) {
-         theta[rightUpperLegId] =  event.target.value;
-         initNodes(rightUpperLegId);
+         theta[fanShaft4Id] =  event.target.value;
+         initNodes(fanShaft4Id);
     };
         document.getElementById("slider9").onchange = function(event) {
-        theta[rightLowerLegId] = event.target.value;
-        initNodes(rightLowerLegId);
-    };
-    document.getElementById("slider10").onchange = function(event) {
-         theta[head2Id] = event.target.value;
-         initNodes(head2Id);
+        theta[fan4Id] = event.target.value;
+        initNodes(fan4Id);
     };
 
     for(i=0; i<numNodes; i++) initNodes(i);
