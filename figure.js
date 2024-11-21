@@ -23,6 +23,12 @@ var vertices = [
     vec4( 0.5, -0.5, -0.5, 1.0 )
 ];
 
+var torsoColor = vec4(1.0, 0.0, 0.0, 1.0);  // Red
+var mainShaftColor = vec4(0.0, 1.0, 0.0, 1.0); // Green
+var fanShaftColor = vec4(0.0, 0.0, 1.0, 1.0); // Blue
+var fanColor = vec4(1.0, 1.0, 0.0, 1.0);   // Yellow
+
+var uColor; // Vertex color attribute location
 
 var torsoId = 0;
 var mainShaftId = 1;
@@ -114,7 +120,7 @@ function initNodes(Id) {
 
     m = translate(0.0, 5.0, 0.0);
       m = mult(m, rotate( -90, vec3(1, 0, 0)));
-	  m = mult(m, rotate(theta[fanShaft1Id], vec3(0, 1, 0)));
+	  m = mult(m, rotate(theta[fanShaft1Id], vec3(0, 0, 1)));
     figure[fanShaft1Id] = createNode( m, fanShaft, fanShaft2Id, fan1Id );
     break;
 
@@ -123,7 +129,7 @@ function initNodes(Id) {
     m = translate(0.0, 5.0, 0.0);
       m = mult(m, rotate( -90, vec3(0, 0, 1)));
       m = mult(m, rotate( 90, vec3(0, 1, 0)));
-	  m = mult(m, rotate(theta[fanShaft2Id], vec3(0, 1, 0)));
+	  m = mult(m, rotate(theta[fanShaft2Id], vec3(0, 0, 1)));
     figure[fanShaft2Id] = createNode( m, fanShaft, fanShaft3Id, fan2Id );
     break;
 
@@ -131,7 +137,7 @@ function initNodes(Id) {
 
     m = translate(0.0, 5.0, 0.0);
       m = mult(m, rotate( 90, vec3(1, 0, 0)));
-	  m = mult(m , rotate(theta[fanShaft3Id], vec3(0, 1, 0)));
+	  m = mult(m , rotate(theta[fanShaft3Id], vec3(0, 0, 1)));
     figure[fanShaft3Id] = createNode( m, fanShaft, fanShaft4Id, fan3Id );
     break;
 
@@ -140,35 +146,35 @@ function initNodes(Id) {
     m = translate(0.0, 5.0, 0.0);
       m = mult(m, rotate( 90, vec3(0, 0, 1)));
       m = mult(m, rotate( 90, vec3(0, 1, 0)));
-	  m = mult(m, rotate(theta[fanShaft4Id], vec3(0, 1, 0)));
+	  m = mult(m, rotate(theta[fanShaft4Id], vec3(0, 0, 1)));
     figure[fanShaft4Id] = createNode( m, fanShaft, null, fan4Id );
     break;
 
     case fan1Id:
 
     m = translate(0.0, 0.0, 0.0);
-    m = mult(m, rotate(theta[fan1Id], vec3(1, 0, 0)));
+    m = mult(m, rotate(theta[fan1Id], vec3(0, 1, 0)));
     figure[fan1Id] = createNode( m, fan, null, null );
     break;
 
     case fan2Id:
 
     m = translate(0.0, 0.0, 0.0);
-    m = mult(m, rotate(theta[fan2Id], vec3(1, 0, 0)));
+    m = mult(m, rotate(theta[fan2Id], vec3(0, 1, 0)));
     figure[fan2Id] = createNode( m, fan, null, null );
     break;
 
     case fan3Id:
 
     m = translate(0.0, 0.0, 0.0);
-    m = mult(m, rotate(theta[fan3Id],vec3(1, 0, 0)));
+    m = mult(m, rotate(theta[fan3Id],vec3(0, 1, 0)));
     figure[fan3Id] = createNode( m, fan, null, null );
     break;
 
     case fan4Id:
 
     m = translate(0.0, 0.0, 0.0);
-    m = mult(m, rotate(theta[fan4Id], vec3(1, 0, 0)));
+    m = mult(m, rotate(theta[fan4Id], vec3(0, 1, 0)));
     figure[fan4Id] = createNode( m, fan, null, null );
     break;
 
@@ -192,6 +198,7 @@ function torso() {
     instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5*torsoHeight, 0.0) );
     instanceMatrix = mult(instanceMatrix, scale( torsoWidth, torsoHeight, torsoWidth));
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(program, "uColor"), flatten(torsoColor));
     // for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
     cylinder();
 }
@@ -201,6 +208,7 @@ function mainShaft() {
     instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * mainShaftHeight, 0.0 ));
 	instanceMatrix = mult(instanceMatrix, scale(mainShaftWidth, mainShaftHeight, mainShaftWidth) );
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(program, "uColor"), flatten(mainShaftColor));
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
 
@@ -209,6 +217,7 @@ function fanShaft() {
     instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * fanShaftHeight, 0.0) );
 	instanceMatrix = mult(instanceMatrix, scale(fanShaftWidth, fanShaftHeight, fanShaftWidth) );
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(program, "uColor"), flatten(fanShaftColor));
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
 
@@ -217,6 +226,7 @@ function fan() {
     instanceMatrix = mult(modelViewMatrix, translate(0.0, 0.5 * fanHeight, 0.0) );
 	instanceMatrix = mult(instanceMatrix, scale(fanWidth, fanHeight, 0.2) )
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(instanceMatrix) );
+    gl.uniform4fv(gl.getUniformLocation(program, "uColor"), flatten(fanColor));
     for(var i =0; i<6; i++) gl.drawArrays(gl.TRIANGLE_FAN, 4*i, 4);
 }
 

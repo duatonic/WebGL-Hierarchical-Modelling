@@ -14,51 +14,50 @@ rotor angle -180 <input id="slider1" type="range"
   />
  180
 </div><br/>
-<div id="slider2">
-left upper arm angle -180 <input id="slider2" type="range"
+
+Fan Shaft 1 angle -180 <input id="slider2" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 <div>
-left lower arm angle -180 <input id="slider3" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-right upper arm angle -180 <input id="slider4" type="range"
- min="-180" max="180" step="10" value="-180"
-  />
- 180
-</div><br/>
-<div>
-right lower arm angle -180 <input id="slider5" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-left upper leg angle -180 <input id="slider6" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-left lower leg angle -180 <input id="slider7" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-right upper leg angle -180 <input id="slider8" type="range"
+Fan 1 angle -180 <input id="slider3" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 
+Fan Shaft 2 angle -180 <input id="slider4" type="range"
+ min="-180" max="180" step="10" value="-180"
+  />
+ 180
+</div><br/>
 <div>
-right lower leg angle -180 <input id="slider9" type="range"
+Fan 2 angle -180 <input id="slider5" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+
+Fan 3 Shaft angle -180 <input id="slider6" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+<div>
+Fan 3 -180 <input id="slider7" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+
+Fan 4 Shaft angle -180 <input id="slider8" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+<div>
+Fan 4 angle -180 <input id="slider9" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
@@ -70,13 +69,17 @@ right lower leg angle -180 <input id="slider9" type="range"
 #version 300 es
 
 in vec4 aPosition;
+uniform vec4 uColor; // Color uniform
 
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
+out vec4 vColor; // Output to fragment shader
+
 void main()
 {
     gl_Position = projectionMatrix * modelViewMatrix * aPosition;
+    vColor = uColor; // Pass the color to the fragment shader
 }
 </script>
 
@@ -85,12 +88,12 @@ void main()
 
 precision mediump float;
 
+in vec4 vColor;  // Input from vertex shader
 out vec4 fColor;
 
 void main()
 {
-    fColor = vec4(1.0, 0.0, 0.0, 1.0);
-
+    fColor = vColor;  // Use the color passed from the vertex shader
 }
 </script>
 
