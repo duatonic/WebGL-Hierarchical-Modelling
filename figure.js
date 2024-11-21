@@ -29,6 +29,7 @@ var fanShaftColor = vec4(0.0, 0.0, 1.0, 1.0); // Blue
 var fanColor = vec4(1.0, 1.0, 0.0, 1.0);   // Yellow
 
 var uColor; // Vertex color attribute location
+var fanSpeed = 0.5;
 
 var torsoId = 0;
 var mainShaftId = 1;
@@ -331,6 +332,8 @@ function init() {
     gl.viewport( 0, 0, canvas.width, canvas.height );
     gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
 
+    gl.enable(gl.DEPTH_TEST);
+
     //
     //  Load shaders and initialize attribute buffers
     //
@@ -407,9 +410,12 @@ function init() {
 }
 
 
-function render() {
+function render(timestamp) {
 
-        gl.clear( gl.COLOR_BUFFER_BIT );
+        gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        theta[mainShaftId] += fanSpeed;
+        theta[mainShaftId] %= 360;
+        initNodes(mainShaftId);
         traverse(torsoId);
         requestAnimationFrame(render);
 }
