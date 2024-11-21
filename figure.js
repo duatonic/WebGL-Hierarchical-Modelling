@@ -343,9 +343,7 @@ function init() {
     projectionMatrix = ortho(-10.0,10.0,-10.0, 10.0,-10.0,10.0);
     modelViewMatrix = mat4();
 
-
-    gl.uniformMatrix4fv(gl.getUniformLocation( program, "modelViewMatrix"), false, flatten(modelViewMatrix)  );
-    gl.uniformMatrix4fv( gl.getUniformLocation( program, "projectionMatrix"), false, flatten(projectionMatrix)  );
+    gl.uniformMatrix4fv(gl.getUniformLocation( program, "projectionMatrix"), false, flatten(projectionMatrix)  );
 
     modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix")
 
@@ -360,43 +358,43 @@ function init() {
     gl.vertexAttribPointer( positionLoc, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( positionLoc );
 
-        document.getElementById("slider0").onchange = function(event) {
+    document.getElementById("slider0").onchange = function(event) {
         theta[torsoId ] = event.target.value;
         initNodes(torsoId);
     };
     document.getElementById("slider1").onchange = function(event) {
         theta[mainShaftId] = event.target.value;
         initNodes(mainShaftId);
-   };
+    };
     document.getElementById("slider2").onchange = function(event) {
-         theta[fanShaft1Id] = event.target.value;
-         initNodes(fanShaft1Id);
+        theta[fanShaft1Id] = event.target.value;
+        initNodes(fanShaft1Id);
     };
     document.getElementById("slider3").onchange = function(event) {
-         theta[fan1Id] =  event.target.value;
-         initNodes(fan1Id);
+        theta[fan1Id] =  event.target.value;
+        initNodes(fan1Id);
     };
-        document.getElementById("slider4").onchange = function(event) {
+    document.getElementById("slider4").onchange = function(event) {
         theta[fanShaft2Id] = event.target.value;
         initNodes(fanShaft2Id);
     };
     document.getElementById("slider5").onchange = function(event) {
-         theta[fan2Id] =  event.target.value;
-         initNodes(fan2Id);
+        theta[fan2Id] =  event.target.value;
+        initNodes(fan2Id);
     };
-        document.getElementById("slider6").onchange = function(event) {
+    document.getElementById("slider6").onchange = function(event) {
         theta[fanShaft3Id] = event.target.value;
         initNodes(fanShaft3Id);
     };
     document.getElementById("slider7").onchange = function(event) {
-         theta[fan3Id] = event.target.value;
-         initNodes(fan3Id);
+        theta[fan3Id] = event.target.value;
+        initNodes(fan3Id);
     };
     document.getElementById("slider8").onchange = function(event) {
-         theta[fanShaft4Id] =  event.target.value;
-         initNodes(fanShaft4Id);
+        theta[fanShaft4Id] =  event.target.value;
+        initNodes(fanShaft4Id);
     };
-        document.getElementById("slider9").onchange = function(event) {
+    document.getElementById("slider9").onchange = function(event) {
         theta[fan4Id] = event.target.value;
         initNodes(fan4Id);
     };
@@ -406,10 +404,10 @@ function init() {
     render();
 }
 
-
 function render() {
-
-        gl.clear( gl.COLOR_BUFFER_BIT );
-        traverse(torsoId);
-        requestAnimationFrame(render);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    traverse(torsoId);
+    requestAnimationFrame(render);
 }
+
+render();

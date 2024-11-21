@@ -1,69 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmill Control</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
 <body>
 
-<div>
-torso angle -180 <input id="slider0" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-rotor angle -180 <input id="slider1" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
+<h1>Windmill Control</h1>
 
-Fan Shaft 1 angle -180 <input id="slider2" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-Fan 1 angle -180 <input id="slider3" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
+<div class="controls container">
+    <div class="form-group">
+        <label for="slider0">Torso Angle</label>
+        <input id="slider0" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider1">Rotor Angle</label>
+        <input id="slider1" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider2">Fan Shaft 1 Angle</label>
+        <input id="slider2" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider3">Fan 1 Angle</label>
+        <input id="slider3" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider4">Fan Shaft 2 Angle</label>
+        <input id="slider4" type="range" class="form-control-range" min="-180" max="180" step="10" value="-180">
+    </div>
+    <div class="form-group">
+        <label for="slider5">Fan 2 Angle</label>
+        <input id="slider5" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider6">Fan Shaft 3 Angle</label>
+        <input id="slider6" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider7">Fan 3 Angle</label>
+        <input id="slider7" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider8">Fan Shaft 4 Angle</label>
+        <input id="slider8" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <div class="form-group">
+        <label for="slider9">Fan 4 Angle</label>
+        <input id="slider9" type="range" class="form-control-range" min="-180" max="180" step="10" value="0">
+    </div>
+    <button id="rotateButton" class="btn btn-primary btn-block">Start Rotation</button>
+    <div class="form-group mt-3">
+        <label for="speedSlider">Rotation Speed</label>
+        <input id="speedSlider" type="range" class="form-control-range" min="1" max="10" step="1" value="1">
+    </div>
+    <div class="form-group">
+        <label for="torsoColor">Torso Color</label>
+        <input id="torsoColor" type="color" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="fanColor">Fan Color</label>
+        <input id="fanColor" type="color" class="form-control">
+    </div>
+</div>
 
-Fan Shaft 2 angle -180 <input id="slider4" type="range"
- min="-180" max="180" step="10" value="-180"
-  />
- 180
-</div><br/>
-<div>
-Fan 2 angle -180 <input id="slider5" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-
-Fan 3 Shaft angle -180 <input id="slider6" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-Fan 3 -180 <input id="slider7" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-
-Fan 4 Shaft angle -180 <input id="slider8" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-Fan 4 angle -180 <input id="slider9" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-
-<canvas id="gl-canvas" width="512"" height="512"> </canvas>
+<canvas id="gl-canvas" width="512" height="512"></canvas>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
@@ -100,6 +127,53 @@ void main()
 <script src="InitShaders.js"></script>
 <script src="MVnew.js"></script>
 <script src="figure.js"></script>
+
+<script>
+let rotating = false;
+let rotationSpeed = 1;
+
+document.getElementById("rotateButton").onclick = function() {
+    rotating = !rotating;
+    this.textContent = rotating ? "Stop Rotation" : "Start Rotation";
+};
+
+document.getElementById("speedSlider").oninput = function(event) {
+    rotationSpeed = event.target.value;
+};
+
+document.getElementById("torsoColor").oninput = function(event) {
+    torsoColor = hexToVec4(event.target.value);
+};
+
+document.getElementById("fanColor").oninput = function(event) {
+    fanColor = hexToVec4(event.target.value);
+};
+
+function rotateBlades() {
+    if (rotating) {
+        theta[mainShaftId] += rotationSpeed;
+        theta[fan1Id] = theta[mainShaftId];
+        theta[fan2Id] = theta[mainShaftId];
+        theta[fan3Id] = theta[mainShaftId];
+        theta[fan4Id] = theta[mainShaftId];
+        initNodes(mainShaftId);
+        initNodes(fan1Id);
+        initNodes(fan2Id);
+        initNodes(fan3Id);
+        initNodes(fan4Id);
+    }
+    requestAnimationFrame(rotateBlades);
+}
+
+function hexToVec4(hex) {
+    let r = parseInt(hex.slice(1, 3), 16) / 255;
+    let g = parseInt(hex.slice(3, 5), 16) / 255;
+    let b = parseInt(hex.slice(5, 7), 16) / 255;
+    return vec4(r, g, b, 1.0);
+}
+
+rotateBlades();
+</script>
 
 </body>
 </html>
