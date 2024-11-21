@@ -1,5 +1,35 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmill Control</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
 <body>
 
 <div>
@@ -9,82 +39,98 @@ torso angle -180 <input id="slider0" type="range"
  180
 </div><br/>
 <div>
-head2 angle -180 <input id="slider10" type="range"
+rotor angle -180 <input id="slider1" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 
+Fan Shaft 1 angle -180 <input id="slider2" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
 <div>
-head1 angle -180 <input id="slider1" type="range"
+Fan 1 angle -180 <input id="slider3" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 
-<div id="slider2">
-left upper arm angle -180 <input id="slider2" type="range"
+Fan Shaft 2 angle -180 <input id="slider4" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 <div>
-left lower arm angle -180 <input id="slider3" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-right upper arm angle -180 <input id="slider4" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-right lower arm angle -180 <input id="slider5" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-left upper leg angle -180 <input id="slider6" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-left lower leg angle -180 <input id="slider7" type="range"
- min="-180" max="180" step="10" value="0"
-  />
- 180
-</div><br/>
-<div>
-right upper leg angle -180 <input id="slider8" type="range"
+Fan 2 angle -180 <input id="slider5" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 
+Fan Shaft 3 angle -180 <input id="slider6" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
 <div>
-right lower leg angle -180 <input id="slider9" type="range"
+Fan 3 -180 <input id="slider7" type="range"
  min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
 
+Fan Shaft 4 angle -180 <input id="slider8" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+<div>
+Fan 4 angle -180 <input id="slider9" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+<div>
+    Rotation Speed: 
+    <span id="min-speed">0</span>
+    <input id="speed-slider" type="range" min="0" max="5" step="0.1" value="0.5" />
+    <span id="max-speed">5</span>
+</div>
+<div>
+    <label for="torso-color">Torso Color:</label>
+    <input type="color" id="torso-color" value="#ff0000">
+</div>
+<div>
+    <label for="main-shaft-color">Main Shaft Color:</label>
+    <input type="color" id="main-shaft-color" value="#00ff00">
+</div>
+<div>
+    <label for="fan-shaft-color">Fan Shaft Color:</label>
+    <input type="color" id="fan-shaft-color" value="#0000ff">
+</div>
+<div>
+    <label for="fan-color">Fan Color:</label>
+    <input type="color" id="fan-color" value="#ffff00">
+</div>
 <canvas id="gl-canvas" width="512"" height="512"> </canvas>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
 
 in vec4 aPosition;
+uniform vec4 uColor; // Color uniform
 
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 
+out vec4 vColor; // Output to fragment shader
+
 void main()
 {
     gl_Position = projectionMatrix * modelViewMatrix * aPosition;
+    vColor = uColor; // Pass the color to the fragment shader
 }
 </script>
 
@@ -93,12 +139,12 @@ void main()
 
 precision mediump float;
 
+in vec4 vColor;  // Input from vertex shader
 out vec4 fColor;
 
 void main()
 {
-    fColor = vec4(1.0, 0.0, 0.0, 1.0);
-
+    fColor = vColor;  // Use the color passed from the vertex shader
 }
 </script>
 
