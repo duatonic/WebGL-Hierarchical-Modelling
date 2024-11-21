@@ -1,5 +1,35 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmill Control</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
 <body>
 
 <div>
@@ -28,7 +58,7 @@ Fan 1 angle -180 <input id="slider3" type="range"
 </div><br/>
 
 Fan Shaft 2 angle -180 <input id="slider4" type="range"
- min="-180" max="180" step="10" value="-180"
+ min="-180" max="180" step="10" value="0"
   />
  180
 </div><br/>
