@@ -323,99 +323,119 @@ function cylinder() {
 }
 
 function init() {
-
-    canvas = document.getElementById( "gl-canvas" );
+    canvas = document.getElementById("gl-canvas");
 
     gl = canvas.getContext('webgl2');
-    if (!gl) { alert( "WebGL 2.0 isn't available" ); }
+    if (!gl) { alert("WebGL 2.0 isn't available"); }
 
-    gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
 
     gl.enable(gl.DEPTH_TEST);
 
-    //
-    //  Load shaders and initialize attribute buffers
-    //
-    program = initShaders( gl, "vertex-shader", "fragment-shader");
-
-    gl.useProgram( program);
+    program = initShaders(gl, "vertex-shader", "fragment-shader");
+    gl.useProgram(program);
 
     instanceMatrix = mat4();
 
-    projectionMatrix = ortho(-10.0,10.0,-10.0, 10.0,-10.0,10.0);
+    projectionMatrix = ortho(-10.0, 10.0, -10.0, 10.0, -10.0, 10.0);
     modelViewMatrix = mat4();
 
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelViewMatrix"), false, flatten(modelViewMatrix));
+    gl.uniformMatrix4fv(gl.getUniformLocation(program, "projectionMatrix"), false, flatten(projectionMatrix));
 
-    gl.uniformMatrix4fv(gl.getUniformLocation( program, "modelViewMatrix"), false, flatten(modelViewMatrix)  );
-    gl.uniformMatrix4fv( gl.getUniformLocation( program, "projectionMatrix"), false, flatten(projectionMatrix)  );
-
-    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix")
+    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
 
     cube();
 
     vBuffer = gl.createBuffer();
-
-    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
-    var positionLoc = gl.getAttribLocation( program, "aPosition" );
-    gl.vertexAttribPointer( positionLoc, 4, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( positionLoc );
+    var positionLoc = gl.getAttribLocation(program, "aPosition");
+    gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(positionLoc);
 
-        document.getElementById("slider0").onchange = function(event) {
-        theta[torsoId ] = event.target.value;
+    document.getElementById("slider0").onchange = function(event) {
+        theta[torsoId] = event.target.value;
         initNodes(torsoId);
     };
     document.getElementById("slider1").onchange = function(event) {
         theta[mainShaftId] = event.target.value;
         initNodes(mainShaftId);
-   };
+    };
     document.getElementById("slider2").onchange = function(event) {
-         theta[fanShaft1Id] = event.target.value;
-         initNodes(fanShaft1Id);
+        theta[fanShaft1Id] = event.target.value;
+        initNodes(fanShaft1Id);
     };
     document.getElementById("slider3").onchange = function(event) {
-         theta[fan1Id] =  event.target.value;
-         initNodes(fan1Id);
+        theta[fan1Id] = event.target.value;
+        initNodes(fan1Id);
     };
-        document.getElementById("slider4").onchange = function(event) {
+    document.getElementById("slider4").onchange = function(event) {
         theta[fanShaft2Id] = event.target.value;
         initNodes(fanShaft2Id);
     };
     document.getElementById("slider5").onchange = function(event) {
-         theta[fan2Id] =  event.target.value;
-         initNodes(fan2Id);
+        theta[fan2Id] = event.target.value;
+        initNodes(fan2Id);
     };
-        document.getElementById("slider6").onchange = function(event) {
+    document.getElementById("slider6").onchange = function(event) {
         theta[fanShaft3Id] = event.target.value;
         initNodes(fanShaft3Id);
     };
     document.getElementById("slider7").onchange = function(event) {
-         theta[fan3Id] = event.target.value;
-         initNodes(fan3Id);
+        theta[fan3Id] = event.target.value;
+        initNodes(fan3Id);
     };
     document.getElementById("slider8").onchange = function(event) {
-         theta[fanShaft4Id] =  event.target.value;
-         initNodes(fanShaft4Id);
+        theta[fanShaft4Id] = event.target.value;
+        initNodes(fanShaft4Id);
     };
-        document.getElementById("slider9").onchange = function(event) {
+    document.getElementById("slider9").onchange = function(event) {
         theta[fan4Id] = event.target.value;
         initNodes(fan4Id);
     };
 
-    for(i=0; i<numNodes; i++) initNodes(i);
+    // Add event listener for the speed slider
+    document.getElementById("speed-slider").oninput = function(event) {
+        fanSpeed = parseFloat(event.target.value);
+    };
+
+    // Add event listeners for the color pickers
+    document.getElementById("torso-color").oninput = function(event) {
+        torsoColor = hexToVec4(event.target.value);
+    };
+    document.getElementById("main-shaft-color").oninput = function(event) {
+        mainShaftColor = hexToVec4(event.target.value);
+    };
+    document.getElementById("fan-shaft-color").oninput = function(event) {
+        fanShaftColor = hexToVec4(event.target.value);
+    };
+    document.getElementById("fan-color").oninput = function(event) {
+        fanColor = hexToVec4(event.target.value);
+    };
+
+    for (i = 0; i < numNodes; i++) initNodes(i);
 
     render();
 }
 
+// Helper function to convert hex color to vec4
+function hexToVec4(hex) {
+    var bigint = parseInt(hex.slice(1), 16);
+    var r = ((bigint >> 16) & 255) / 255.0;
+    var g = ((bigint >> 8) & 255) / 255.0;
+    var b = (bigint & 255) / 255.0;
+    return vec4(r, g, b, 1.0);
+}
+
 
 function render(timestamp) {
-
-        gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        theta[mainShaftId] += fanSpeed;
-        theta[mainShaftId] %= 360;
-        initNodes(mainShaftId);
-        traverse(torsoId);
-        requestAnimationFrame(render);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    theta[mainShaftId] += fanSpeed;
+    theta[mainShaftId] %= 360;
+    initNodes(mainShaftId);
+    traverse(torsoId);
+    requestAnimationFrame(render);
 }
